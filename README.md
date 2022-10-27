@@ -1,1 +1,1 @@
-test
+This is demo wordpress dashboard widget for Rank Math

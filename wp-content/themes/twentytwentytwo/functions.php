@@ -63,5 +63,26 @@ endif;
 
 add_action( 'wp_enqueue_scripts', 'twentytwentytwo_styles' );
 
+add_action('wp_dashboard_setup', function () {
+  wp_add_dashboard_widget('graph_widget', 'Graph Widget', 'graph_dashboard_display_widget');
+  function graph_dashboard_display_widget() {
+    ?>
+    <div id="dashboard_widget_for_rankMath"></div>
+    <?php
+  }
+});
+
+add_action('admin_enqueue_scripts', function ($hook) {
+	// only load scripts on dashboard
+	if ($hook != 'index.php') {
+	  return;
+	}
+	
+	$js_to_load = 'http://localhost:3000/static/js/bundle.js';
+
+	wp_enqueue_script('ghost_inspector_js', $js_to_load, '', mt_rand(10,1000), true);
+
+});
+
 // Add block patterns
 require get_template_directory() . '/inc/block-patterns.php';
