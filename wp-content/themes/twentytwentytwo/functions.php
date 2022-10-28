@@ -63,6 +63,7 @@ endif;
 
 add_action( 'wp_enqueue_scripts', 'twentytwentytwo_styles' );
 
+//add react root element into wordpress admin dashboard widget
 add_action('wp_dashboard_setup', function () {
   wp_add_dashboard_widget('graph_widget', 'Graph Widget', 'graph_dashboard_display_widget');
   function graph_dashboard_display_widget() {
@@ -72,6 +73,7 @@ add_action('wp_dashboard_setup', function () {
   }
 });
 
+//add react app in wordpress admin dashboard widget
 add_action('admin_enqueue_scripts', function ($hook) {
 	// only load scripts on dashboard
 	if ($hook != 'index.php') {
@@ -80,9 +82,28 @@ add_action('admin_enqueue_scripts', function ($hook) {
 	
 	$js_to_load = 'http://localhost:3000/static/js/bundle.js';
 
-	wp_enqueue_script('ghost_inspector_js', $js_to_load, '', mt_rand(10,1000), true);
+	wp_enqueue_script('graph_demo_js', $js_to_load, '', mt_rand(10,1000), true);
 
 });
 
+
+add_action('rest_api_init', function () {
+	register_rest_route('graphData/v1', '/proxy', array(
+	  'methods'  => WP_REST_Server::READABLE,
+	  'callback' => 'graph_demo_api_proxy',
+	));
+});
+
+function graph_demo_api_proxy($request) {
+	global $wpdb;
+	$params = $request->get_query_params();
+	$getDataForDays = $params['days'];
+	$day_before = date( 'Y-m-d', strtotime( date("Y-m-d") . ' -'.$getDataForDays.' day' ) );
+	$table_name = $wpdb->prefix . "demoData where demoDataTimestamp > '".$day_before."' ORDER BY demoDataTimestamp ASC";
+	$records = $wpdb->get_results( "SELECT * FROM $table_name" );
+	return json_encode($records);
+}
+
+  
 // Add block patterns
 require get_template_directory() . '/inc/block-patterns.php';
