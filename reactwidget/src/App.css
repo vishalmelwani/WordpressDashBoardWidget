@@ -36,3 +36,17 @@
     transform: rotate(360deg);
   }
 }
+
+.rangeWrapper {
+  width: 100%;
+  height: 40px;
+}
+
+.rangeSelector{
+  float: right;
+}
+
+.graph {
+  width: 100%;
+  margin-bottom: 20px 0px;
+}
