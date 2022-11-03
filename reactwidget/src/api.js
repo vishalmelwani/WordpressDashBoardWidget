@@ -4,4 +4,4 @@ export const request = async (endpoint, params = {}) => {
     return JSON.parse(json)
   }
   
-  export const getGraphData = async (days) => request(`/dashboardWidget/wp-json/graphData/v1/proxy?days=${days}`)
+  export const getGraphData = async (days) => request(`/wp-json/graphData/v1/proxy?days=${days}`)
